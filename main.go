@@ -27,13 +27,11 @@ func main() {
 		configutil.OptAddPreferredPaths(*flagConfig),
 	)
 
+	slant.Print(os.Stdout, "LaMETRIC")
+
 	log := logger.All()
 	client := lametric.New(cfg.Devices[0].Addr, cfg.Devices[0].Token)
 	client.Client.Log = log
-
-	// START.
-	slant.Print(os.Stdout, "LaMETRIC")
-
 	_, err := client.CreateNotification(context.Background(), lametric.CreateNotificationInput{
 		Model: lametric.DeviceModel{
 			Frames: []lametric.Frame{

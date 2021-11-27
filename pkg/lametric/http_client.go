@@ -11,14 +11,16 @@ import (
 )
 
 // New returns a new http client.
-func New(addr, token string) *HTTPClient {
+func New(addr, token string, opts ...apiutil.Option) *HTTPClient {
 	hc := HTTPClient{
 		Client: apiutil.New(fmt.Sprintf("http://%s:8080", addr),
-			apiutil.OptDebug(true),
-			apiutil.OptDefaults(
-				r2.OptBasicAuth("dev", token),
-				r2.OptHeaderValue(webutil.HeaderAccept, "application/json"),
-			),
+			append(opts,
+				apiutil.OptDebug(true),
+				apiutil.OptDefaults(
+					r2.OptBasicAuth("dev", token),
+					r2.OptHeaderValue(webutil.HeaderAccept, "application/json"),
+				),
+			)...,
 		),
 	}
 	return &hc
