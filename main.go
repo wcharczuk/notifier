@@ -32,13 +32,21 @@ func main() {
 	log := logger.All()
 	client := lametric.New(cfg.Devices[0].Addr, cfg.Devices[0].Token)
 	client.Client.Log = log
-	_, err := client.CreateNotification(context.Background(), lametric.CreateNotificationInput{
-		Model: lametric.DeviceModel{
+	_, err := client.CreateNotification(context.Background(), lametric.Notification{
+		Model: lametric.NotificationModel{
 			Frames: []lametric.Frame{
 				{
-					Icon: 2867,
-					Text: "Hello!",
+					Icon: lametric.IconAttention,
+					Text: "ALERT",
 				},
+				{
+					Icon: lametric.IconAppleLogo,
+					Text: "Adam has been fired.",
+				},
+			},
+			Sound: &lametric.Sound{
+				Category: lametric.SoundCategoryAlarms,
+				ID:       lametric.SoundAlarm10,
 			},
 		},
 	})

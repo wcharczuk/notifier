@@ -32,7 +32,7 @@ type HTTPClient struct {
 }
 
 // CreateNotification creates a notification.
-func (hc HTTPClient) CreateNotification(ctx context.Context, args CreateNotificationInput) (*CreateNotificationOutput, error) {
+func (hc HTTPClient) CreateNotification(ctx context.Context, args Notification) (*CreateNotificationOutput, error) {
 	var output CreateNotificationOutput
 	if _, err := hc.Client.JSON(ctx, &output,
 		r2.OptPost(),
