@@ -3,16 +3,12 @@ package main
 import (
 	"context"
 	"flag"
-	"os"
+	"log"
 	"sync"
 
-	"github.com/blend/go-sdk/ansi/slant"
-	"github.com/blend/go-sdk/async"
-	"github.com/blend/go-sdk/configutil"
-	"github.com/blend/go-sdk/logger"
-
-	"github.com/wcharczuk/notifier/pkg/config"
-	"github.com/wcharczuk/notifier/pkg/lametric"
+	"github.com/wcharczuk/lametric/pkg/async"
+	"github.com/wcharczuk/lametric/pkg/config"
+	"github.com/wcharczuk/lametric/pkg/lametric"
 )
 
 var (
@@ -21,17 +17,14 @@ var (
 
 func init() {
 	flag.Parse()
+	log.SetFlags(log.Lshortfile | log.LUTC | log.Ldate | log.Ltime | log.Lmicroseconds)
 }
 
 func main() {
 	var cfg config.Config
-	configutil.MustRead(&cfg,
-		configutil.OptAddPreferredPaths(*flagConfig),
+	config.MustRead(&cfg,
+		*flagConfig,
 	)
-
-	slant.Print(os.Stdout, "LaMETRIC")
-
-	log := logger.All()
 
 	notification := lametric.Notification{
 		Model: lametric.NotificationModel{
@@ -62,10 +55,16 @@ func main() {
 		}(x)
 	}
 	wg.Wait()
-	if err := errs.All(); err != nil {
-		logger.MaybeFatalExit(log, errs.All())
+	if len(errs) > 0 {
+		maybeFatalExit(errs.All())
 	}
-	logger.MaybeInfof(log, "%d notifications sent", len(cfg.Devices))
+	log.Printf("%d notifications sent", len(cfg.Devices))
+}
+
+func maybeFatalExit(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func send(ctx context.Context, device config.Device, notification lametric.Notification) error {

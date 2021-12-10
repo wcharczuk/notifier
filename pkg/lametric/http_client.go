@@ -3,11 +3,9 @@ package lametric
 import (
 	"context"
 	"fmt"
+	"net/http"
 
-	"github.com/blend/go-sdk/r2"
-	"github.com/blend/go-sdk/webutil"
-
-	"github.com/wcharczuk/notifier/pkg/apiutil"
+	"github.com/wcharczuk/lametric/pkg/apiutil"
 )
 
 // New returns a new http client.
@@ -15,10 +13,9 @@ func New(addr, token string, opts ...apiutil.Option) *HTTPClient {
 	hc := HTTPClient{
 		Client: apiutil.New(fmt.Sprintf("http://%s:8080", addr),
 			append(opts,
-				apiutil.OptDebug(true),
 				apiutil.OptDefaults(
-					r2.OptBasicAuth("dev", token),
-					r2.OptHeaderValue(webutil.HeaderAccept, "application/json"),
+					apiutil.OptBasicAuth("dev", token),
+					apiutil.OptHeader("Accept", "application/json"),
 				),
 			)...,
 		),
@@ -35,9 +32,9 @@ type HTTPClient struct {
 func (hc HTTPClient) CreateNotification(ctx context.Context, args Notification) (*CreateNotificationOutput, error) {
 	var output CreateNotificationOutput
 	if _, err := hc.Client.JSON(ctx, &output,
-		r2.OptPost(),
-		r2.OptPath("/api/v2/device/notifications"),
-		r2.OptJSONBody(args),
+		apiutil.OptMethod(http.MethodPost),
+		apiutil.OptPath("/api/v2/device/notifications"),
+		apiutil.OptJSONBody(args),
 	); err != nil {
 		return nil, err
 	}

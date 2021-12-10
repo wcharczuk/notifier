@@ -7,10 +7,10 @@ import (
 // ResponseFilter mutates a response, handling things like status codes as errors.
 type ResponseFilter func(*http.Response, error) (*http.Response, error)
 
-// ResponseFilterInvalidStatusAsError translates status codes into errors if they're outside the acceptable range (200-299).
+// InvalidHTTPStatusAsError translates status codes into errors if they're outside the acceptable range (200-299).
 //
 // This can be used as a Client `ResponseFilter` to retry on bad status codes.
-func ResponseFilterInvalidStatusAsError(res *http.Response, err error) (*http.Response, error) {
+func InvalidHTTPStatusAsError(res *http.Response, err error) (*http.Response, error) {
 	if err != nil {
 		return res, err
 	}
