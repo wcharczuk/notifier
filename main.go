@@ -33,13 +33,15 @@ func main() {
 					Icon: lametric.IconAttention,
 					Text: "ALERT",
 				},
-			},
-			/*
-				Sound: &lametric.Sound{
-					Category: lametric.SoundCategoryAlarms,
-					ID:       lametric.SoundAlarm10,
+				{
+					Icon: lametric.IconAppleLogo,
+					Text: "Adam has been fired",
 				},
-			*/
+			},
+			Sound: &lametric.Sound{
+				Category: lametric.SoundCategoryAlarms,
+				ID:       lametric.SoundAlarm10,
+			},
 		},
 	}
 
